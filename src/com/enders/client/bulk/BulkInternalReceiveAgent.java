@@ -100,9 +100,19 @@ public class BulkInternalReceiveAgent extends Thread{
 	      try {
 	        System.out.println(String.format("CONNECT HOST/PORT : %s / %s", new Object[] { this.CONNECT_HOST, Integer.valueOf(this.CONNECT_PORT) }));
 	        Socket s = new Socket(this.CONNECT_HOST, this.CONNECT_PORT);
-	        sendOperator(s.getOutputStream());
-	        receiveBinary(s);
-	        s.close();
+	        
+	        try {
+	        	sendOperator(s.getOutputStream());
+		        receiveBinary(s);	
+	        }catch (Exception e) {
+	        	LOGGER.error(e);
+	        }finally {
+	        	if(s!=null) {
+	        		s.close();
+	        		LOGGER.info("socket is closed..");
+	        	}
+			}
+	        
 	      } catch (IOException e) {
 	    	LOGGER.error(e);
 	        //System.out.println("IOException Error ::: " + e.getMessage());
